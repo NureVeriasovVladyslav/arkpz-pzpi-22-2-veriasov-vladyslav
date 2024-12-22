@@ -27,4 +27,20 @@ export class UserService {
         const result = await this.prisma.user.delete({ where: { id: id } });
         return result;
     }
+
+    async getUserPlus(id: string): Promise<CreateUserDto> {
+        const result = await this.prisma.user.findUnique({
+            where: { id: id },
+            include: {
+              rental: {
+                include: {
+                  rentalVehicle: { include: { vehicle: true } },
+                  payment: true,
+                },
+              },
+            },
+         });
+        return result;
+    }
+    
 }
