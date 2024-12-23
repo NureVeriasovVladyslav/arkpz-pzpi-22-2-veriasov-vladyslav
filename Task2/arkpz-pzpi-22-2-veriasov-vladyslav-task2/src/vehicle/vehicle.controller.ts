@@ -47,4 +47,13 @@ export class VehicleController {
         const result = await this.vehicleService.deleteVehicle(id);
         return result;
     }
+
+    @Get('vehicle/distance/:id')
+    @HttpCode(200)
+    @ApiResponse({ status: 200, description: 'List of all vehicles returned successfully.' })
+    @ApiResponse({ status: 500, description: 'Internal server error.' })
+    public async calculateTotalDistance(@Param('id') vehicleId: string): Promise<number> {
+        const result = await this.vehicleService.calculateTotalDistance(vehicleId);
+        return result;
+    }
 }

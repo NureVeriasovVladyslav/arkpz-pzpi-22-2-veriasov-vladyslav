@@ -29,11 +29,32 @@ export class VehicleService {
     }
 
     async calculateTotalDistance(vehicleId: string): Promise<number> {
+        // const rentals = await this.prisma.rentalVehicle.findMany({
+        //     where: { vehicleId },
+        //     include: { rental: true },
+        // });
+
+        // return rentals.reduce((total, rentalVehicle) => total + rentalVehicle.rental.distance, 0);
+
+        // Отримуємо всі оренди для вказаного транспортного засобу
         const rentals = await this.prisma.rentalVehicle.findMany({
             where: { vehicleId },
             include: { rental: true },
         });
-    
-        return rentals.reduce((total, rentalVehicle) => total + rentalVehicle.rental.distance, 0);
+
+        // Обчислюємо загальну дистанцію
+        const totalDistance = rentals.reduce(
+            (total, rentalVehicle) => total + rentalVehicle.rental.distance,
+            0,
+        );
+
+        // Оновлюємо поле `runnedDistance` у транспортному засобі
+        await this.prisma.vehicle.update({
+            where: { id: vehicleId },
+            data: { runnedDistance: totalDistance },
+        });
+
+        // Повертаємо обчислену загальну дистанцію
+        return totalDistance;
     }
 }
