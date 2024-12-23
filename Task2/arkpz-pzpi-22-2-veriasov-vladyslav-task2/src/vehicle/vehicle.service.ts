@@ -57,4 +57,36 @@ export class VehicleService {
         // Повертаємо обчислену загальну дистанцію
         return totalDistance;
     }
+
+    async getVehicleInfo(vehicleId: string): Promise<VehicleDto> {
+        const result = await this.prisma.vehicle.findUnique({
+            where: { id : vehicleId },
+        });
+        return result;
+    }
+
+    async calculateAverageSpeed(vehicleId: string): Promise<number> {
+        const rentals = await this.prisma.rentalVehicle.findMany({
+            where: { vehicleId },
+            include: { rental: true },
+        });
+    
+        const totalSpeed = rentals.reduce((sum, rentalVehicle) => sum + rentalVehicle.rental.avgSpeed, 0);
+        return rentals.length > 0 ? totalSpeed / rentals.length : 0;
+    }
+ 
+    async findMostEfficientVehicle(): Promise<{ vehicleId: string, efficiency: number }> {
+        const vehicles = await this.prisma.vehicle.findMany({
+            include: { rentalVehicle: { include: { rental: true } } },
+        });
+    
+        const efficiencyData = vehicles.map(vehicle => {
+            const totalDistance = vehicle.rentalVehicle.reduce((sum, rv) => sum + rv.rental.distance, 0);
+            const totalEnergy = vehicle.rentalVehicle.reduce((sum, rv) => sum + rv.rental.energyConsumed, 0);
+            const efficiency = totalDistance > 0 ? totalEnergy / totalDistance : Infinity;
+            return { vehicleId: vehicle.id, efficiency };
+        });
+    
+        return efficiencyData.reduce((best, current) => (current.efficiency < best.efficiency ? current : best));
+    }
 }

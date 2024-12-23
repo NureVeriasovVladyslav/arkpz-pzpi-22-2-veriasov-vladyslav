@@ -47,4 +47,15 @@ export class BatteryController {
         const result = await this.batteryService.deleteBattery(id);
         return result;
     }
+
+    @Get('status')
+    @HttpCode(200)
+    async getBatteryStatuses(): Promise<{ batteryId: string; status: string }[]> {
+        try {
+            const result = await this.batteryService.calculateBatteryStatus();
+            return result;
+        } catch (error) {
+            throw new Error(`Error while retrieving battery statuses: ${error.message}`);
+        }
+    }
 }

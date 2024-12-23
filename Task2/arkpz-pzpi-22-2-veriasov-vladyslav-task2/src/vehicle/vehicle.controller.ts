@@ -56,4 +56,37 @@ export class VehicleController {
         const result = await this.vehicleService.calculateTotalDistance(vehicleId);
         return result;
     }
+
+
+    @Get('vehicle/avg/speed/:id')
+    @HttpCode(200)
+    @ApiResponse({ status: 200, description: 'List of all vehicles returned successfully.' })
+    @ApiResponse({ status: 500, description: 'Internal server error.' })
+    public async calculateAverageSpeed(@Param('id') vehicleId: string): Promise<number> {
+        const result = await this.vehicleService.calculateAverageSpeed(vehicleId);
+        return result;
+    }
+
+    @Get('vehicle/info/:id')
+    @HttpCode(200)
+    @ApiResponse({ status: 200, description: 'List of all vehicles returned successfully.' })
+    @ApiResponse({ status: 500, description: 'Internal server error.' })
+    public async getVehicleInfo(@Param('id') vehicleId: string): Promise<VehicleDto> {
+        const result = await this.vehicleService.getVehicleInfo(vehicleId);
+        return result;
+    }
+
+    @Get('most-efficient')
+    @HttpCode(200)
+    @ApiResponse({ status: 200, description: 'List of all vehicles returned successfully.' })
+    @ApiResponse({ status: 500, description: 'Internal server error.' })
+    public async getMostEfficientVehicle(): Promise<{ vehicleId: string; efficiency: number }> {
+        try {
+            const result = await this.vehicleService.findMostEfficientVehicle();
+            return result;
+        } catch (error) {
+            throw new Error(`Error while calculating the most efficient vehicle: ${error.message}`);
+        }
+    }
+
 }

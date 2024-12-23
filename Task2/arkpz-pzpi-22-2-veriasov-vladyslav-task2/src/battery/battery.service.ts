@@ -27,4 +27,12 @@ export class BatteryService {
         const result = await this.prisma.battery.delete({ where: { id: id } });
         return result;
     }
+    
+    async calculateBatteryStatus(): Promise<{ batteryId: string, status: string }[]> {
+        const batteries = await this.prisma.battery.findMany();
+        return batteries.map(battery => ({
+            batteryId: battery.id,
+            status: battery.chargeLevel < 20 ? "LOW" : "NORMAL",
+        }));
+    }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RentalService } from './rental.service';
 import { RentalDto } from './dtos/rental.dto';
@@ -46,5 +46,19 @@ export class RentalController {
     public async deleteRental(@Param('id') id: string) {
         const result = await this.rentalService.deleteRental(id);
         return result;
+    }
+
+    @Get('total')
+    @HttpCode(200)
+    async getTotalProfit(
+        @Query('startDate') startDate: string,
+        @Query('endDate') endDate: string
+    ): Promise<{ totalProfit: number }> {
+        try {
+            const totalProfit = await this.rentalService.calculateTotalProfit(startDate, endDate);
+            return { totalProfit };
+        } catch (error) {
+            throw new Error(`Error while calculating total profit: ${error.message}`);
+        }
     }
 }
