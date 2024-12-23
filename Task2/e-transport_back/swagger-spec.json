@@ -60,7 +60,7 @@
                 ]
             }
         },
-        "/user/{id}": {
+        "/user/put/{id}": {
             "put": {
                 "operationId": "UserController_updateUser",
                 "parameters": [
@@ -97,7 +97,9 @@
                 "tags": [
                     "user"
                 ]
-            },
+            }
+        },
+        "/user/{id}": {
             "delete": {
                 "operationId": "UserController_deleteUser",
                 "parameters": [
