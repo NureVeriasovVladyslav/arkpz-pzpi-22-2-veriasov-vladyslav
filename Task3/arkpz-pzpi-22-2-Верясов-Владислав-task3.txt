@@ -1,0 +1,201 @@
+Харківський університет радіоелектроніки Факультет комп'ютерних наук 
+Кафедра програмної інженерії
+
+
+
+
+
+ЗВІТ
+до лабораторної роботи №3 з дисципліни «Аналіз та рефакторинг коду»
+на тему: «РОЗРОБКА БІЗНЕС-ЛОГІКИ ТА ФУНКЦІЙ АДМІНІСТРУВАННЯ СЕРВЕРНОЇ ЧАСТИНИ ПРОГРАМНОЇ СИСТЕМИ» 
+
+
+
+
+Виконав ст. гр ПЗПІ-22-2 Верясов Владислав Олексійович
+
+Перевірили
+Доцент кафедри ПІ Лещинський Володимир Олександрович 
+Старший викладач кафедри ПІ
+Сокорчук Ігор Петрович 
+
+
+
+
+
+
+Харків 2024
+МЕТА
+
+
+Метою цієї лабораторної роботи є розробка бізнес-логіки та функцій адміністрування серверної частини програмної системи, забезпечення її взаємодії з базою даних та клієнтами через API, а також перевірка роботи створених компонентів.
+
+ЗАВДАННЯ
+
+
+Робота передбачає розробку бізнес-логіки та функцій адміністрування серверної частини програмної системи. В рамках завдання необхідно створити програмну реалізацію бізнес-логіки, забезпечити функціональність адміністрування, розробити та тестувати взаємодію серверної частини з базою даних і клієнтами через API. Також потрібно здійснити перевірку роботи серверної частини, оновити або завантажити програмний код у GitHub репозиторій, створити відеозапис демонстрації функціональності, завантажити його на YouTube та підготувати звіт, що включає текстовий опис, фрагменти програмного коду, UML діаграми та документацію, з подальшим експортом у форматі PDF і текстовому файлі.
+
+ХІД РОБОТИ
+
+
+Назва: «Система для підтримки та регуляції прокату електротранспорту»
+Назва англійською мовою: «Electric Transport Rental Management System»
+Власна назва: «E-Transport».
+
+На першому етапі було розроблено бізнес-логіку серверної частини програмної системи. Для цього була визначена основна функціональність системи, яку необхідно реалізувати, та створено відповідні методи для обробки даних. Бізнес-логіка включала операції перевірки даних, обробки запитів і виконання основних алгоритмів, які визначають роботу програми, наприклад, бронювання транспорту або перевірка доступності ресурсів.
+Другим етапом було розроблено функції адміністрування, які дозволяють управляти користувачами та ролями в системі. Для цього були створені методи для додавання, видалення та оновлення користувачів, а також зміни їхніх ролей. Функції адміністрування включали можливість управління правами доступу та контролю за діями користувачів. 
+На наступному етапі була здійснена програмна реалізація розроблених методів бізнес-логіки та адміністрування. Для цього було використано фреймворк NestJS та мову програмування TypeScript. Код був організований у вигляді сервісів та контролерів, що відповідали за обробку запитів від користувачів і взаємодію з базою даних через Prisma ORM.
+Після завершення розробки бізнес-логіки та адміністрування була проведена перевірка роботи серверної частини системи. Для цього було використано Swagger для тестування API, перевірено правильність обробки запитів та відповідей від сервера. Також було виконано тестування взаємодії серверної частини з базою даних для переконання у правильності всіх операцій з даними.
+Наступним етапом був створений відеозапис, у якому продемонстровано роботу серверної частини програми, зокрема перевірку функцій бізнес-логіки та адміністрування. Відео показує, як тестуються основні функції через API за допомогою Swagger. Під час запису було використано українську мову як мову відео та субтитрів.
+
+
+
+ВИСНОВОК
+
+
+У ході виконання лабораторної роботи було розроблено та реалізовано бізнес-логіку та функції адміністрування серверної частини програмної системи. Завдяки використанню фреймворку NestJS та мови програмування TypeScript вдалося створити потужну серверну частину, яка успішно взаємодіє з базою даних через Prisma ORM. Було реалізовано ефективне управління користувачами та їх ролями, що забезпечило необхідні функції адміністрування.
+Виконання цієї роботи дозволило глибше зануритися у розробку серверної частини, зокрема в області створення бізнес-логіки та адміністрування, а також вивчити принципи тестування API через Swagger. Крім того, практика роботи з PostgreSQL та PgAdmin4 для адміністрування БД допомогла зрозуміти основи роботи з реляційними базами даних у реальних проєктах.
+Завдяки використанню Docker для розгортання системи була забезпечена зручність у розробці та тестуванні, а також підготовлено систему до подальшого розгортання у реальному середовищі. Створення відеозапису та документації для лабораторної роботи дозволило не тільки закріпити теоретичні знання, але й відпрацювати практичні навички у створенні звітів та наданні результатів роботи.
+Виконання лабораторної роботи сприяло набуттю цінного досвіду у розробці серверних частин програмних систем, використанні інструментів для тестування, а також у роботі з БД та інтеграцією цих компонентів у єдину систему.
+
+Відео на YouTube: https://youtu.be/12y1tB1Qbo4
+
+
+
+ 
+ДОДАТОК А
+UML діаграма діяльності для серверної частини
+
+
+ 
+Рисунок 1- UML діаграма діяльності для серверної частини
+ 
+ДОДАТОК Б
+Схема бази даних
+  
+   
+Рисунок 2- Схема бази даних
+ 
+ДОДАТОК В
+UML діаграма взаємодії для серверної частини 
+
+   
+
+Рисунок 3 - UML-діаграма прецедентів серверної частини
+ 
+ДОДАТОК Г
+Логіка взаємодії серверної частини з БД (приклад розробленого сервісу для таблиці User)
+
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { UserDto } from './dtos/user.dto';
+import { CreateUserDto } from './dtos/create-user.dto';
+import { UpdateUserDto } from './dtos/update-user.dto';
+
+@Injectable()
+export class UserService {
+    constructor(private prisma: PrismaService) { }
+    async findAllUser(): Promise<UserDto[]> {
+        const result = await this.prisma.user.findMany();
+        return result;
+    }
+
+    async createUser(user: UserDto): Promise<CreateUserDto> {
+        const result = await this.prisma.user.create({ data: { ...user } });
+        return result;
+    }
+
+    async updateUser(user: UpdateUserDto, email: string): Promise<CreateUserDto> {
+        const result = await this.prisma.user.update({ data: { ...user }, where: { email: email } });
+        return result;
+    }
+
+    async deleteUser(id: string): Promise<CreateUserDto> {
+        const result = await this.prisma.user.delete({ where: { id: id } });
+        return result;
+    }
+
+    async getUserPlus(id: string): Promise<CreateUserDto> {
+        const result = await this.prisma.user.findUnique({
+            where: { id: id },
+            include: {
+              rental: {
+                include: {
+                  rentalVehicle: { include: { vehicle: true } },
+                  payment: true,
+                },
+              },
+            },
+         });
+        return result;
+    }
+}
+
+ДОДАТОК Д
+Логіка взаємодії серверної частини з клієнтами (приклад розробленого контролера для таблиці User)
+
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put } from '@nestjs/common';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { UserService } from './user.service';
+import { UserDto } from './dtos/user.dto';
+import { UpdateUserDto } from './dtos/update-user.dto';
+
+@ApiTags('user')
+@Controller('user')
+export class UserController {
+    constructor(private readonly userService: UserService) { }
+
+    @Get()
+    @HttpCode(200)
+    @ApiResponse({ status: 200, description: 'List of all users returned successfully.' })
+    @ApiResponse({ status: 500, description: 'Internal server error.' })
+    public async findAllUser() {
+        const result = await this.userService.findAllUser();
+        return result;
+    }
+
+    @Post()
+    @HttpCode(201)
+    @ApiResponse({ status: 201, description: 'User created successfully.' })
+    @ApiResponse({ status: 400, description: 'Invalid input data.' })
+    @ApiResponse({ status: 500, description: 'Internal server error.' })
+    public async createUser(@Body() user: UserDto) {
+        const result = await this.userService.createUser(user);
+        return result;
+    }
+
+    @Put(':id')
+    @HttpCode(200)
+    @ApiResponse({ status: 200, description: 'User updated successfully.' })
+    @ApiResponse({ status: 404, description: 'User not found.' })
+    @ApiResponse({ status: 500, description: 'Internal server error.' })
+    public async updateUser(@Body() user: UpdateUserDto, @Param('id') id: string) {
+        const result = await this.userService.updateUser(user, id);
+        return result;
+    }
+
+    @Delete(':id')
+    @HttpCode(200)
+    @ApiResponse({ status: 200, description: 'User deleted successfully.' })
+    @ApiResponse({ status: 404, description: 'User not found.' })
+    @ApiResponse({ status: 500, description: 'Internal server error.' })
+    public async deleteUser(@Param('id') id: string) {
+        const result = await this.userService.deleteUser(id);
+        return result;
+    }
+
+    @Get(':id')
+    @HttpCode(200)
+    @ApiResponse({ status: 200, description: 'User details returned successfully.' })
+    @HttpCode(404)
+    @ApiResponse({ status: 404, description: 'User not found.' })
+    @HttpCode(500)
+    @ApiResponse({ status: 500, description: 'Internal server error.' })
+    public async getUserDetails(@Param('id') userId: string): Promise<UserDto> {
+        return this.userService.getUserPlus(userId);
+    }
+}
+
+
+
+
