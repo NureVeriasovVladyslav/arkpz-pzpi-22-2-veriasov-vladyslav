@@ -29,13 +29,13 @@ export class UserController {
         return result;
     }
 
-    @Put(':id')
+    @Put(':email')
     @HttpCode(200)
     @ApiResponse({ status: 200, description: 'User updated successfully.' })
     @ApiResponse({ status: 404, description: 'User not found.' })
     @ApiResponse({ status: 500, description: 'Internal server error.' })
-    public async updateUser(@Body() user: UpdateUserDto, @Param('id') id: string) {
-        const result = await this.userService.updateUser(user, id);
+    public async updateUser(@Body() user: UpdateUserDto, @Param('email') email: string) {
+        const result = await this.userService.updateUser(user, email);
         return result
     }
 

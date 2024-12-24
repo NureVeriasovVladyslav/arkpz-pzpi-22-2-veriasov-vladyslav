@@ -3,6 +3,12 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { RentalDto } from './dtos/rental.dto';
 import { CreateRentalDto } from './dtos/create-rental.dto';
 import { UpdateRentalDto } from './dtos/update-rental.dto';
+import { PaymentDto } from 'src/user/dtos/userPlus.dto';
+import { RentalVehicleDto } from 'src/rental-vehicle/dtos/rental-vehicle.dto';
+import { VehicleDto } from 'src/vehicle/dtos/vehicle.dto';
+import { CreateRentalVehicleDto } from 'src/rental-vehicle/dtos/create-rental-vehicle.dto';
+import { CreatePaymentDto } from 'src/payment/dtos/create-payment.dto';
+import { RentalNotFoundException } from 'src/exceptions/user-exceptions';
 
 @Injectable()
 export class RentalService {
@@ -37,7 +43,82 @@ export class RentalService {
                 },
             },
         });
-    
+
         return payments.reduce((total, payment) => total + parseFloat(payment.amount), 0);
     }
+
+    async createRentalFull(
+        rental: RentalDto,
+        payment: PaymentDto,
+        rentalVehicle: RentalVehicleDto
+    ): Promise<CreateRentalDto> {
+        const result = await this.prisma.$transaction(async (prisma) => {
+            // Створення прокату
+            const newRental = await prisma.rental.create({
+                data: {
+                    userId: rental.userId,
+                    distance: rental.distance,
+                    isActive: rental.isActive,
+                    avgSpeed: rental.avgSpeed,
+                    maxSpeed: rental.maxSpeed,
+                    energyConsumed: rental.energyConsumed,
+                    dateRented: rental.dateRented,
+                    dateReturned: rental.dateReturned,
+                    rentalVehicle: {
+                        create: {
+                            vehicleId: rentalVehicle.vehicleId,
+                        },
+                    },
+                    payment: {
+                        create: {
+                            paymentMethod: payment.paymentMethod,
+                            amount: payment.amount,
+                            date: payment.date || new Date().toISOString(), // Встановлюємо поточну дату, якщо не передано
+                        },
+                    },
+                },
+                include: {
+                    rentalVehicle: true,
+                    payment: true,
+                },
+            });
+
+            // Оновлення пройденої дистанції транспортного засобу
+            await prisma.vehicle.update({
+                where: { id: rentalVehicle.vehicleId },
+                data: {
+                    runnedDistance: { increment: rental.distance },
+                },
+            });
+
+            return newRental;
+        });
+
+        return result;
+    }
+
+    async getUserRentalsWithVehicles(userId: string) {
+        const result = await this.prisma.$queryRaw`
+          SELECT * FROM get_user_rentals_with_vehicles(${userId}::uuid);
+        `;
+        return result;
+    }
+
+    // Приклад методу, який може генерувати виключення
+    async getRentalById(rentalId: string) {
+        const rental = await this.prisma.rental.findUnique({
+            where: { id: rentalId },
+        });
+
+        if (!rental) {
+            throw new RentalNotFoundException(`Rental with ID ${rentalId} not found.`);
+        }
+
+        return rental;
+    }
+    // async createRentalFull(rental: RentalDto, payment: PaymentDto): Promise<CreatePaymentDto> {
+    //     const resultRental = await this.prisma.rental.create({ data: { ...rental } });
+    //     const resultPayment = await this.prisma.payment.create({ data: { ...payment } });
+    //     return result;
+    // }
 }
