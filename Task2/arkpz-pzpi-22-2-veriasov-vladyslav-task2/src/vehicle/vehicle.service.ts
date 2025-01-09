@@ -15,7 +15,15 @@ export class VehicleService {
     }
 
     async createVehicle(vehicle: VehicleDto): Promise<CreateVehicleDto> {
-        const result = await this.prisma.vehicle.create({ data: { ...vehicle } });
+        const result = await this.prisma.vehicle.create({ 
+            // data: { ...vehicle } 
+            data: {
+                status: vehicle.status,
+                runnedDistance: 0,
+                releaseDate: new Date().toISOString(),
+                currentLocation: vehicle.currentLocation,
+            },
+        });
         return result;
     }
 
@@ -30,12 +38,6 @@ export class VehicleService {
     }
 
     async calculateTotalDistance(vehicleId: string): Promise<number> {
-        // const rentals = await this.prisma.rentalVehicle.findMany({
-        //     where: { vehicleId },
-        //     include: { rental: true },
-        // });
-
-        // return rentals.reduce((total, rentalVehicle) => total + rentalVehicle.rental.distance, 0);
 
         // Отримуємо всі оренди для вказаного транспортного засобу
         const rentals = await this.prisma.rentalVehicle.findMany({
@@ -143,4 +145,39 @@ export class VehicleService {
         return result;
     }
 
+    async calculateAverageUsageTime(vehicleId: string): Promise<number> {
+        const rentals = await this.prisma.rentalVehicle.findMany({
+            where: { vehicleId },
+            include: { rental: true },
+        });
+    
+        if (rentals.length === 0) {
+            return 0; // Якщо оренд немає, повертаємо 0
+        }
+    
+        // Обчислюємо загальний час використання
+        const totalUsageTime = rentals.reduce((sum, rentalVehicle) => {
+            const rental = rentalVehicle.rental;
+            const dateRented = new Date(rental.dateRented);
+            const dateReturned = new Date(rental.dateReturned);
+            const usageTime = (dateReturned.getTime() - dateRented.getTime()) / 3600000; // Час у годинах
+            return sum + usageTime;
+        }, 0);
+    
+        // Обчислюємо середній час використання
+        return totalUsageTime / rentals.length;
+    }
+    
+    async countRentalsByVehicle(): Promise<{ vehicleId: string; rentalCount: number }[]> {
+        const vehicles = await this.prisma.vehicle.findMany({
+            include: { rentalVehicle: true },
+        });
+    
+        // Підраховуємо кількість прокатів для кожного транспортного засобу
+        return vehicles.map(vehicle => ({
+            vehicleId: vehicle.id,
+            rentalCount: vehicle.rentalVehicle.length,
+        }));
+    }
+    
 }

@@ -87,4 +87,17 @@ export class BatteryController {
         const result = await this.batteryService.getImplementedBatteryInVehicle(id);
         return result;
     }
+
+    // @Post()
+    // @UseGuards(JwtAuthGuard, RoleGuard)
+    // @Roles(Role.ADMIN , Role.TECHNICIAN)
+    // @ApiBearerAuth()
+    // @HttpCode(201)
+    // @ApiResponse({ status: 201, description: 'Battery created successfully.' })
+    // @ApiResponse({ status: 400, description: 'Invalid input data.' })
+    // @ApiResponse({ status: 500, description: 'Internal server error.' })
+    // public async implementBattery(@Body() battery: BatteryDto) {
+    //     const result = await this.batteryService.implementBattery(battery);
+    //     return result;
+    // }
 }

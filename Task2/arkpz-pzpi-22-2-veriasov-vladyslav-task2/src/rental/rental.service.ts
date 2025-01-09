@@ -12,6 +12,8 @@ import { RentalNotFoundException } from 'src/exceptions/user-exceptions';
 import { Rental } from '@prisma/client';
 import { strict } from 'assert';
 import { RentalFullDto } from './dtos/rental-full.dto';
+import { CreateRentalFullDto } from './dtos/create-rental-full.dto';
+import { PaymentRentalVehicleDto } from './dtos/paymentRentalVehicle.dto';
 
 @Injectable()
 export class RentalService {
@@ -185,11 +187,64 @@ export class RentalService {
 
         return rental;
     }
-    // async createRentalFull(rental: RentalDto, payment: PaymentDto): Promise<CreatePaymentDto> {
-    //     const resultRental = await this.prisma.rental.create({ data: { ...rental } });
-    //     const resultPayment = await this.prisma.payment.create({ data: { ...payment } });
-    //     return result;
-    // }
+    async createRentalFull(rental: RentalFullDto): Promise<CreateRentalFullDto> {
+
+        const vehicle = await this.prisma.vehicle.findUnique({
+            where: { id: rental.vehicleId },
+        });
+
+        if (!vehicle) {
+            throw new NotFoundException('Vehicle not found');
+        }
+
+        const resultVehicle = await this.prisma.vehicle.update({
+            data: { ...vehicle, status: 'INUSE' }, where: { id: rental.vehicleId }
+        });
+
+        const resultRental = await this.prisma.rental.create({
+            data: {
+                userId: rental.userId,
+                dateRented: new Date().toISOString(),
+                dateReturned: "not returned",
+                distance: rental.distance,
+                avgSpeed: rental.avgSpeed,
+                maxSpeed: rental.maxSpeed,
+                energyConsumed: rental.energyConsumed,
+                isActive: true,
+            },
+        });
+
+        const resultRentalVehicle = await this.prisma.rentalVehicle.create({
+            data: {
+                rentalId: resultRental.id,
+                vehicleId: rental.vehicleId,
+            },
+        });
+
+        // const resultPayment = await this.prisma.payment.create({
+        //     data: {
+        //         rentalId: resultRental.id,
+        //         amount: 0,
+        //         date: new Date().toISOString(),
+        //     },
+        // });
+
+        // const resultRental = await this.prisma.rental.create({ data: { ...rental } });
+
+        return {
+            id: resultRental.id,
+            userId: resultRental.userId,
+            dateRented: resultRental.dateRented,
+            dateReturned: resultRental.dateReturned,
+            distance: resultRental.distance,
+            avgSpeed: resultRental.avgSpeed,
+            maxSpeed: resultRental.maxSpeed,
+            energyConsumed: resultRental.energyConsumed,
+            isActive: resultRental.isActive,
+            vehicleId: resultRentalVehicle.vehicleId,
+            // rentalId: resultRentalVehicle.rentalId,
+        };
+    }
 
 
     // async startRental(userId: string, vehicleId: string): Promise<Rental> {
@@ -236,12 +291,21 @@ export class RentalService {
     //     return rental;
     // }
 
-    async endRental(rentalId: string, paymentAmount: number): Promise<Rental> {
+    async endRentalFull(payment: PaymentRentalVehicleDto): Promise<PaymentRentalVehicleDto> {
         // Находим активную аренду
+        console.log("payment", payment)
+        const rentalVehicle = await this.prisma.rentalVehicle.findUnique({
+            where: { id: payment.rentalVehicleId },
+        });
+
+        console.log("rentalVehicle", rentalVehicle)
+
         const rental = await this.prisma.rental.findUnique({
-            where: { id: rentalId },
+            where: { id: rentalVehicle.rentalId },
             include: { rentalVehicle: { include: { vehicle: true } } },
         });
+
+        console.log("rental", rental)
 
         if (!rental || !rental.isActive) {
             throw new BadRequestException('Rental is not active or not found');
@@ -254,14 +318,29 @@ export class RentalService {
         }
 
         // Рассчитываем изменения
-        const traveledDistance = Math.random() * 100; // Пример расчета расстояния
-        const energyConsumed = traveledDistance * 0.2; // Пример расчета энергии
+        const traveledDistance = Math.random() * 100; // Дистанція у кілометрах
+        const traveledTimeMs = new Date().getTime() - new Date(rental.dateRented).getTime(); // Час у мілісекундах
+        const traveledTimeHours = traveledTimeMs / 3600000; // Час у годинах
+
+        // Приклад розрахунку середньої швидкості
+        const avgSpeed = traveledDistance / traveledTimeHours;
+        const maxSpeed = 28; // Максимальна швидкість у км/год
+        const energyPerKm = 20; // Середнє енергоспоживання на 1 км у Wh
+
+        // Фактор швидкості: якщо середня швидкість ближче до максимальної, енергоспоживання зростає.
+        const speedFactor = avgSpeed / maxSpeed > 1 ? 1 : avgSpeed / maxSpeed;
+
+        // Розрахунок витраченої енергії
+        const energyConsumed = traveledDistance * energyPerKm * speedFactor;
+        const amount = energyConsumed * 0.1; // Пример расчета оплаты: 0.1 доллара за 1 Wh
 
         // Создаем запись оплаты
-        await this.prisma.payment.create({
+
+        const resultPayment = await this.prisma.payment.create({
             data: {
                 rentalId: rental.id,
-                amount: paymentAmount.toFixed(2),
+                paymentMethod: payment.paymentMethod,
+                amount: amount.toFixed(2),
                 date: new Date().toISOString(),
             },
         });
@@ -300,10 +379,15 @@ export class RentalService {
                 isActive: false,
                 dateReturned: new Date().toISOString(),
                 distance: traveledDistance,
+                avgSpeed: avgSpeed,
+                maxSpeed: maxSpeed, // повинно бути знято з контролера
                 energyConsumed,
             },
         });
 
-        return updatedRental;
+        return {
+            ...resultPayment,
+            rentalVehicleId: payment.rentalVehicleId,
+        };
     }
 }

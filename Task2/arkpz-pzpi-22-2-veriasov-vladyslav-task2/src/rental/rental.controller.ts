@@ -14,6 +14,9 @@ import { Role } from '@prisma/client';
 import { RoleGuard } from 'src/auth/roles.guard';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { OwnershipGuard } from 'src/auth/ownership.guard';
+import { RentalFullDto } from './dtos/rental-full.dto';
+import { CreateRentalFullDto } from './dtos/create-rental-full.dto';
+import { PaymentRentalVehicleDto } from './dtos/paymentRentalVehicle.dto';
 
 @ApiTags('rental')
 @Controller('rental')
@@ -116,23 +119,23 @@ export class RentalController {
             throw new InternalServerErrorException('Internal Server Error');
         }
     }
-
-    // @Post('full')
+    
+    // @Post(':full')
     // @HttpCode(201)
     // @ApiResponse({ status: 201, description: 'Rental with payment and vehicle created successfully.' })
     // @ApiResponse({ status: 400, description: 'Invalid input data.' })
     // @ApiResponse({ status: 500, description: 'Internal server error.' })
     // public async createRentalFull(
-    //   @Body() body: { rental: RentalDto; payment: PaymentDto; rentalVehicle: RentalVehicleDto }
-    // ): Promise<CreateRentalDto> {
+    //   @Body() body: { rental: RentalFullDto}
+    // ): Promise<CreateRentalFullDto> {
     //   try {
-    //     const { rental, payment, rentalVehicle } = body;
+    //     const { rental } = body;
 
-    //     if (!rental || !payment || !rentalVehicle) {
+    //     if (!rental) {
     //       throw new HttpException('Invalid input data.', HttpStatus.BAD_REQUEST);
     //     }
 
-    //     const result = await this.rentalService.createRentalFull(rental, payment, rentalVehicle);
+    //     const result = await this.rentalService.createRentalFull(rental);
     //     return result;
     //   } catch (error) {
     //     throw new HttpException(
@@ -141,4 +144,30 @@ export class RentalController {
     //     );
     //   }
     // }
+
+    @Post('full/start/:data')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.ADMIN , Role.USER)
+    @ApiBearerAuth()
+    @HttpCode(201)
+    @ApiResponse({ status: 201, description: 'Rental created successfully.' })
+    @ApiResponse({ status: 400, description: 'Invalid input data.' })
+    @ApiResponse({ status: 500, description: 'Internal server error.' })
+    public async createRentalFull(@Body() rental: RentalFullDto) {
+        const result = await this.rentalService.createRentalFull(rental);
+        return result;
+    }
+
+    @Post('full/end/:payment')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.ADMIN , Role.USER)
+    @ApiBearerAuth()
+    @HttpCode(201)
+    @ApiResponse({ status: 201, description: 'Rental created successfully.' })
+    @ApiResponse({ status: 400, description: 'Invalid input data.' })
+    @ApiResponse({ status: 500, description: 'Internal server error.' })
+    public async endRentalFull(@Body() paymentRentalVehicle: PaymentRentalVehicleDto) {
+            const result = await this.rentalService.endRentalFull( paymentRentalVehicle );
+        return result;
+    }
 }

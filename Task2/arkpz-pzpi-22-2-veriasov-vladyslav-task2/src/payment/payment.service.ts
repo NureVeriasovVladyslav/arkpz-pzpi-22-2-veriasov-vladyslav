@@ -46,7 +46,9 @@ export class PaymentService {
     async findAllPaymentByUser(id: string): Promise<PaymentDto[]> {
         const result = await this.prisma.payment.findMany({
             where: {
-                rentalId: id,
+                rental:{
+                    userId: id
+                }
             }
         });
         return result;

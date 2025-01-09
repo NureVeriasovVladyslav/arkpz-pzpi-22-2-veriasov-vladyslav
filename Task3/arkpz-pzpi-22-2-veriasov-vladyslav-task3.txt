@@ -42,11 +42,80 @@
 Назва англійською мовою: «Electric Transport Rental Management System»
 Власна назва: «E-Transport».
 
-На першому етапі було розроблено бізнес-логіку серверної частини програмної системи. Для цього була визначена основна функціональність системи, яку необхідно реалізувати, та створено відповідні методи для обробки даних. Бізнес-логіка включала операції перевірки даних, обробки запитів і виконання основних алгоритмів, які визначають роботу програми, наприклад, бронювання транспорту або перевірка доступності ресурсів.
-Другим етапом було розроблено функції адміністрування, які дозволяють управляти користувачами та ролями в системі. Для цього були створені методи для додавання, видалення та оновлення користувачів, а також зміни їхніх ролей. Функції адміністрування включали можливість управління правами доступу та контролю за діями користувачів. 
-На наступному етапі була здійснена програмна реалізація розроблених методів бізнес-логіки та адміністрування. Для цього було використано фреймворк NestJS та мову програмування TypeScript. Код був організований у вигляді сервісів та контролерів, що відповідали за обробку запитів від користувачів і взаємодію з базою даних через Prisma ORM.
-Після завершення розробки бізнес-логіки та адміністрування була проведена перевірка роботи серверної частини системи. Для цього було використано Swagger для тестування API, перевірено правильність обробки запитів та відповідей від сервера. Також було виконано тестування взаємодії серверної частини з базою даних для переконання у правильності всіх операцій з даними.
-Наступним етапом був створений відеозапис, у якому продемонстровано роботу серверної частини програми, зокрема перевірку функцій бізнес-логіки та адміністрування. Відео показує, як тестуються основні функції через API за допомогою Swagger. Під час запису було використано українську мову як мову відео та субтитрів.
+     В рамках системи підтримки та регуляції прокату електротранспорту можна реалізувати такі функції, враховуючи основні аспекти адміністрування, безпеки та аналізу даних.
+
+Основні функції системи:
+
+ 1. Управління прокатом електротранспорту:
+Інформація про транспортні засоби:
+  - Отримання списку всіх транспортних засобів із зазначенням їх стану, пробігу та місцезнаходження;
+  - Пошук транспортних засобів за статусом (наприклад, "вільний", "використовується).
+- Оренда транспортного засобу:
+  - Можливість зарезервувати транспортний засіб, якщо він доступний.
+  - Активація оренди з реєстрацією часу початку, стану батареї та місцезнаходження.
+  Завершення оренди з автоматичним розрахунком:
+    - Дистанції, часу використання, середньої швидкості;
+    - Витрати енергії та загальної суми до оплати;
+    - Оновлення стану транспортного засобу (наприклад, статус, пробіг, заряд батареї).
+Моніторинг оренд:
+  - Отримання списку всіх оренд транспортного засобу або користувача;
+  - Надання адміністратору інформації про всі оренди та пов’язані платежі.
+Аналіз ефективності транспортних засобів:
+  - Обчислення загальної дистанції, середньої швидкості, та ефективності витрати енергії для кожного транспортного засобу;
+  - Підрахунок кількості прокатів по кожному транспортному засобу;
+  - Знаходження найефективнішого транспортного засобу.
+
+ 2. Моніторинг стану батарей:
+Інформація про батареї:
+  - Відображення рівня заряду батареї кожного транспортного засобу;
+  - Система сповіщень про низький рівень заряду для технічного персоналу та адміністратора.
+Обслуговування батарей:
+  - Прив’язка батареї до транспортного засобу;
+  - Моніторинг стану батарей з метою своєчасного обслуговування.
+
+ 3. Управління користувачами:
+Робота з профілями користувачів:
+  - Реєстрація, оновлення та видалення користувачів;
+  - Пошук користувачів за ID або email.
+
+Перегляд інформації про користувача:
+  - Отримання списку всіх платежів користувача;
+  - Отримання списку всіх оренд користувача з пов’язаними транспортними засобами;
+- Отримання усіх оренд транспорту користувача, та оплату до них.
+
+ 4. Управління платежами:
+Облік фінансових операцій:
+  - Створення платежів за оренду транспортних засобів;
+  - Перегляд історії платежів користувачів;
+  - Видалення та редагування записів про платежі.
+Аналіз доходів:
+  - Обчислення загального доходу за всі транспортні засоби;
+  - Аналіз середнього доходу на транспортний засіб.
+
+
+ 5. Адміністрування:
+Робота з транспортними засобами:
+  -    Додавання, оновлення та видалення транспортних засобів;
+  - Відстеження пробігу та ефективності використання кожного транспортного засобу.
+ Розподіл ролей:
+  - Налаштування прав доступу для адміністратора, клієнта та обслуговуючого персоналу;
+  -    Обмеження доступу до критичного функціоналу згідно ролей.
+
+ 6. Забезпечення безпеки:
+Авторизація та аутентифікація:
+  - Використання JWT-токенів для доступу до системи;
+  - Реєстрація нових користувачів із шифруванням паролів за допомогою bcrypt;
+  - Контроль доступу до функціоналу системи згідно ролей та власності.
+
+ Функції аналізу даних:
+Аналіз ефективності використання транспорту:
+   - Обчислення середнього часу використання кожного транспортного засобу;
+   - Підрахунок кількості оренд по кожному транспортному засобу.
+Моніторинг доходів:
+   - Загальна виручка за всі транспортні засоби;
+   - Середній дохід на транспортний засіб.
+Моніторинг обслуговування:
+   - Відстеження стану кожного транспортного засобу та батареї.
 
 
 
@@ -58,7 +127,7 @@
 Завдяки використанню Docker для розгортання системи була забезпечена зручність у розробці та тестуванні, а також підготовлено систему до подальшого розгортання у реальному середовищі. Створення відеозапису та документації для лабораторної роботи дозволило не тільки закріпити теоретичні знання, але й відпрацювати практичні навички у створенні звітів та наданні результатів роботи.
 Виконання лабораторної роботи сприяло набуттю цінного досвіду у розробці серверних частин програмних систем, використанні інструментів для тестування, а також у роботі з БД та інтеграцією цих компонентів у єдину систему.
 
-Відео на YouTube: https://youtu.be/12y1tB1Qbo4
+Відео на YouTube: https://youtu.be/TfAMmMhRfKs
 
 
 
@@ -68,134 +137,373 @@ UML діаграма діяльності для серверної частин
 
 
  
-Рисунок 1- UML діаграма діяльності для серверної частини
+Рисунок 1 - UML діаграма діяльності для серверної частини
  
 ДОДАТОК Б
-Схема бази даних
-  
-   
-Рисунок 2- Схема бази даних
+UML Діаграма взаємодії для серверної частини
+
+
  
-ДОДАТОК В
-UML діаграма взаємодії для серверної частини 
+Рисунок 2 - UML Діаграма взаємодії для серверної частини
 
-   
-
-Рисунок 3 - UML-діаграма прецедентів серверної частини
  
-ДОДАТОК Г
-Логіка взаємодії серверної частини з БД (приклад розробленого сервісу для таблиці User)
+ДОДАТОК В
+Логіка взаємодії серверної частини з БД (приклад розробленого сервісу для таблиці Vehicle)
 
 import { Injectable } from '@nestjs/common';
+import { VehicleDto } from './dtos/vehicle.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { UserDto } from './dtos/user.dto';
-import { CreateUserDto } from './dtos/create-user.dto';
-import { UpdateUserDto } from './dtos/update-user.dto';
+import { CreateVehicleDto } from './dtos/create-vehicle.dto';
+import { UpdateVehicleDto } from './dtos/update-vehicle.dto';
+import { VehicleStatus } from '@prisma/client';
 
 @Injectable()
-export class UserService {
+export class VehicleService {
     constructor(private prisma: PrismaService) { }
-    async findAllUser(): Promise<UserDto[]> {
-        const result = await this.prisma.user.findMany();
+
+    async findAllVehicle(): Promise<VehicleDto[]> {
+        const result = await this.prisma.vehicle.findMany();
         return result;
     }
 
-    async createUser(user: UserDto): Promise<CreateUserDto> {
-        const result = await this.prisma.user.create({ data: { ...user } });
-        return result;
-    }
-
-    async updateUser(user: UpdateUserDto, email: string): Promise<CreateUserDto> {
-        const result = await this.prisma.user.update({ data: { ...user }, where: { email: email } });
-        return result;
-    }
-
-    async deleteUser(id: string): Promise<CreateUserDto> {
-        const result = await this.prisma.user.delete({ where: { id: id } });
-        return result;
-    }
-
-    async getUserPlus(id: string): Promise<CreateUserDto> {
-        const result = await this.prisma.user.findUnique({
-            where: { id: id },
-            include: {
-              rental: {
-                include: {
-                  rentalVehicle: { include: { vehicle: true } },
-                  payment: true,
-                },
-              },
+    async createVehicle(vehicle: VehicleDto): Promise<CreateVehicleDto> {
+        const result = await this.prisma.vehicle.create({ 
+            // data: { ...vehicle } 
+            data: {
+                status: vehicle.status,
+                runnedDistance: 0,
+                releaseDate: new Date().toISOString(),
+                currentLocation: vehicle.currentLocation,
             },
-         });
+        });
         return result;
     }
+
+    async updateVehicle(vehicle: UpdateVehicleDto, id: string): Promise<CreateVehicleDto> {
+        const result = await this.prisma.vehicle.update({ data: { ...vehicle }, where: { id: id } });
+        return result;
+    }
+
+    async deleteVehicle(id: string): Promise<CreateVehicleDto> {
+        const result = await this.prisma.vehicle.delete({ where: { id: id } });
+        return result;
+    }
+
+    async calculateTotalDistance(vehicleId: string): Promise<number> {
+
+        // Отримуємо всі оренди для вказаного транспортного засобу
+        const rentals = await this.prisma.rentalVehicle.findMany({
+            where: { vehicleId },
+            include: { rental: true },
+        });
+
+        // Обчислюємо загальну дистанцію
+        const totalDistance = rentals.reduce(
+            (total, rentalVehicle) => total + rentalVehicle.rental.distance,
+            0,
+        );
+
+        // Оновлюємо поле `runnedDistance` у транспортному засобі
+        await this.prisma.vehicle.update({
+            where: { id: vehicleId },
+            data: { runnedDistance: totalDistance },
+        });
+
+        // Повертаємо обчислену загальну дистанцію
+        return totalDistance;
+    }
+
+    async getVehicleInfo(vehicleId: string): Promise<VehicleDto> {
+        const result = await this.prisma.vehicle.findUnique({
+            where: { id: vehicleId },
+        });
+        return result;
+    }
+
+    async calculateAverageSpeed(vehicleId: string): Promise<number> {
+        const rentals = await this.prisma.rentalVehicle.findMany({
+            where: { vehicleId },
+            include: { rental: true },
+        });
+
+        const totalSpeed = rentals.reduce((sum, rentalVehicle) => sum + rentalVehicle.rental.avgSpeed, 0);
+        return rentals.length > 0 ? totalSpeed / rentals.length : 0;
+    }
+
+    async findMostEfficientVehicle(): Promise<{ vehicleId: string, efficiency: number }> {
+        const vehicles = await this.prisma.vehicle.findMany({
+            include: { rentalVehicle: { include: { rental: true } } },
+        });
+
+        const efficiencyData = vehicles.map(vehicle => {
+            const totalDistance = vehicle.rentalVehicle.reduce((sum, rv) => sum + rv.rental.distance, 0);
+            const totalEnergy = vehicle.rentalVehicle.reduce((sum, rv) => sum + rv.rental.energyConsumed, 0);
+            const efficiency = totalDistance > 0 ? totalEnergy / totalDistance : Infinity;
+            return { vehicleId: vehicle.id, efficiency };
+        });
+
+        return efficiencyData.reduce((best, current) => (current.efficiency < best.efficiency ? current : best));
+    }
+
+    async findAllVehicleWithStatus(status: VehicleStatus): Promise<VehicleDto[]> {
+        const result = await this.prisma.vehicle.findMany({
+            where: { status: status },
+        });
+        return result;
+    }
+
+    async findAllFreeVehicle(): Promise<any> {
+        const result = await this.prisma.vehicle.findMany({
+            where: {
+                status: "FREE",
+            },
+            select: {
+                id: true,
+                status: true,
+                currentLocation: true,
+            },
+            // batteryVehicle: {
+            // include: {
+            //     , 
+
+            //     battery: {
+            //         select: {
+            //             chargeLevel: true, // Уровень заряда батареи
+            //         },
+            //     },
+            //     location: {
+            //         select: {
+            //             latitude: true, // Широта
+            //             longitude: true, // Долгота
+            //             address: true,  // Адрес (если есть)
+            //         },
+            //     },
+            // },
+        });
+
+        // return result.map(vehicle => ({
+        //     id: vehicle.id,
+        //     model: vehicle.model,
+        //     status: vehicle.status,
+        //     batteryCharge: vehicle.battery?.chargeLevel || 0, // Заряд батареи или 0, если нет батареи
+        //     location: vehicle.location ? {
+        //         latitude: vehicle.location.latitude,
+        //         longitude: vehicle.location.longitude,
+        //         address: vehicle.location.address || '',
+        //     } : null,
+        // }));
+
+        return result;
+    }
+
+    async calculateAverageUsageTime(vehicleId: string): Promise<number> {
+        const rentals = await this.prisma.rentalVehicle.findMany({
+            where: { vehicleId },
+            include: { rental: true },
+        });
+    
+        if (rentals.length === 0) {
+            return 0; // Якщо оренд немає, повертаємо 0
+        }
+    
+        // Обчислюємо загальний час використання
+        const totalUsageTime = rentals.reduce((sum, rentalVehicle) => {
+            const rental = rentalVehicle.rental;
+            const dateRented = new Date(rental.dateRented);
+            const dateReturned = new Date(rental.dateReturned);
+            const usageTime = (dateReturned.getTime() - dateRented.getTime()) / 3600000; // Час у годинах
+            return sum + usageTime;
+        }, 0);
+    
+        // Обчислюємо середній час використання
+        return totalUsageTime / rentals.length;
+    }
+    
+    async countRentalsByVehicle(): Promise<{ vehicleId: string; rentalCount: number }[]> {
+        const vehicles = await this.prisma.vehicle.findMany({
+            include: { rentalVehicle: true },
+        });
+    
+        // Підраховуємо кількість прокатів для кожного транспортного засобу
+        return vehicles.map(vehicle => ({
+            vehicleId: vehicle.id,
+            rentalCount: vehicle.rentalVehicle.length,
+        }));
+    }
+    
 }
 
-ДОДАТОК Д
-Логіка взаємодії серверної частини з клієнтами (приклад розробленого контролера для таблиці User)
+ 
+ДОДАТОК Г
+Логіка взаємодії серверної частини з клієнтами (приклад розробленого контролера для таблиціVehicle)
 
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { UserService } from './user.service';
-import { UserDto } from './dtos/user.dto';
-import { UpdateUserDto } from './dtos/update-user.dto';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { VehicleService } from './vehicle.service';
+import { VehicleDto } from './dtos/vehicle.dto';
+import { UpdateVehicleDto } from './dtos/update-vehicle.dto';
+import { Roles } from 'src/auth/roles.decorator';
+import { Role, VehicleStatus } from '@prisma/client';
+import { RoleGuard } from 'src/auth/roles.guard';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
-@ApiTags('user')
-@Controller('user')
-export class UserController {
-    constructor(private readonly userService: UserService) { }
+@ApiTags('vehicle')
+@Controller('vehicle')
+export class VehicleController {
+    constructor(private readonly vehicleService: VehicleService) { }
 
     @Get()
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.MODERATOR , Role.ADMIN , Role.USER , Role.TECHNICIAN)
+    @ApiBearerAuth()
     @HttpCode(200)
-    @ApiResponse({ status: 200, description: 'List of all users returned successfully.' })
+    @ApiResponse({ status: 200, description: 'List of all vehicles returned successfully.' })
     @ApiResponse({ status: 500, description: 'Internal server error.' })
-    public async findAllUser() {
-        const result = await this.userService.findAllUser();
+    public async findAllVehicle() {
+        const result = await this.vehicleService.findAllVehicle();
         return result;
     }
 
     @Post()
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.ADMIN)
+    @ApiBearerAuth()
     @HttpCode(201)
-    @ApiResponse({ status: 201, description: 'User created successfully.' })
+    @ApiResponse({ status: 201, description: 'Vehicle created successfully.' })
     @ApiResponse({ status: 400, description: 'Invalid input data.' })
     @ApiResponse({ status: 500, description: 'Internal server error.' })
-    public async createUser(@Body() user: UserDto) {
-        const result = await this.userService.createUser(user);
+    public async createVehicle(@Body() vehicle: VehicleDto) {
+        const result = await this.vehicleService.createVehicle(vehicle);
         return result;
     }
 
     @Put(':id')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.MODERATOR , Role.ADMIN , Role.TECHNICIAN)
+    @ApiBearerAuth()
     @HttpCode(200)
-    @ApiResponse({ status: 200, description: 'User updated successfully.' })
-    @ApiResponse({ status: 404, description: 'User not found.' })
+    @ApiResponse({ status: 200, description: 'Vehicle updated successfully.' })
+    @ApiResponse({ status: 404, description: 'Vehicle not found.' })
     @ApiResponse({ status: 500, description: 'Internal server error.' })
-    public async updateUser(@Body() user: UpdateUserDto, @Param('id') id: string) {
-        const result = await this.userService.updateUser(user, id);
+    public async updateVehicle(@Body() vehicle: UpdateVehicleDto, @Param('id') id: string) {
+        const result = await this.vehicleService.updateVehicle(vehicle, id);
         return result;
     }
 
     @Delete(':id')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.ADMIN , Role.TECHNICIAN)
+    @ApiBearerAuth()
     @HttpCode(200)
-    @ApiResponse({ status: 200, description: 'User deleted successfully.' })
-    @ApiResponse({ status: 404, description: 'User not found.' })
+    @ApiResponse({ status: 200, description: 'Vehicle deleted successfully.' })
+    @ApiResponse({ status: 404, description: 'Vehicle not found.' })
     @ApiResponse({ status: 500, description: 'Internal server error.' })
-    public async deleteUser(@Param('id') id: string) {
-        const result = await this.userService.deleteUser(id);
+    public async deleteVehicle(@Param('id') id: string) {
+        const result = await this.vehicleService.deleteVehicle(id);
         return result;
     }
 
-    @Get(':id')
+    @Get('vehicle/distance/:id')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.MODERATOR , Role.ADMIN , Role.TECHNICIAN)
+    @ApiBearerAuth()
     @HttpCode(200)
-    @ApiResponse({ status: 200, description: 'User details returned successfully.' })
-    @HttpCode(404)
-    @ApiResponse({ status: 404, description: 'User not found.' })
-    @HttpCode(500)
+    @ApiResponse({ status: 200, description: 'List of all vehicles returned successfully.' })
     @ApiResponse({ status: 500, description: 'Internal server error.' })
-    public async getUserDetails(@Param('id') userId: string): Promise<UserDto> {
-        return this.userService.getUserPlus(userId);
+    public async calculateTotalDistance(@Param('id') vehicleId: string): Promise<number> {
+        const result = await this.vehicleService.calculateTotalDistance(vehicleId);
+        return result;
+    }
+
+    @Get('vehicle/avg/speed/:id')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.MODERATOR , Role.ADMIN , Role.USER , Role.TECHNICIAN)
+    @ApiBearerAuth()
+    @HttpCode(200)
+    @ApiResponse({ status: 200, description: 'List of all vehicles returned successfully.' })
+    @ApiResponse({ status: 500, description: 'Internal server error.' })
+    public async calculateAverageSpeed(@Param('id') vehicleId: string): Promise<number> {
+        const result = await this.vehicleService.calculateAverageSpeed(vehicleId);
+        return result;
+    }
+
+    @Get('vehicle/info/:id')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.MODERATOR , Role.ADMIN , Role.TECHNICIAN)
+    @ApiBearerAuth()
+    @HttpCode(200)
+    @ApiResponse({ status: 200, description: 'List of all vehicles returned successfully.' })
+    @ApiResponse({ status: 500, description: 'Internal server error.' })
+    public async getVehicleInfo(@Param('id') vehicleId: string): Promise<VehicleDto> {
+        const result = await this.vehicleService.getVehicleInfo(vehicleId);
+        return result;
+    }
+
+    @Get('most-efficient')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.MODERATOR , Role.ADMIN , Role.TECHNICIAN)
+    @ApiBearerAuth()
+    @HttpCode(200)
+    @ApiResponse({ status: 200, description: 'List of all vehicles returned successfully.' })
+    @ApiResponse({ status: 500, description: 'Internal server error.' })
+    public async getMostEfficientVehicle(): Promise<{ vehicleId: string; efficiency: number }> {
+        try {
+            const result = await this.vehicleService.findMostEfficientVehicle();
+            return result;
+        } catch (error) {
+            throw new Error(`Error while calculating the most efficient vehicle: ${error.message}`);
+        }
+    }
+
+    @Get('vehicle/with/:status')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.MODERATOR , Role.ADMIN , Role.TECHNICIAN)
+    @ApiBearerAuth()
+    @HttpCode(200)
+    @ApiResponse({ status: 200, description: 'List of all vehicles returned successfully.' })
+    @ApiResponse({ status: 500, description: 'Internal server error.' })
+    public async findAllVehicleWithStatus(@Param('status') status: VehicleStatus): Promise<VehicleDto[]> {
+        const result = await this.vehicleService.findAllVehicleWithStatus(status);
+        return result;
+    }
+    
+    @Get('vehicle/free')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.USER, Role.ADMIN)
+    @ApiBearerAuth()
+    @HttpCode(200)
+    @ApiResponse({ status: 200, description: 'List of all vehicles returned successfully.' })
+    @ApiResponse({ status: 500, description: 'Internal server error.' })
+    public async findAllFreeVehicle(): Promise<VehicleDto[]> {
+        const result = await this.vehicleService.findAllFreeVehicle();
+        return result;
+    }
+
+    @Get('average-usage-time/:id')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.MODERATOR, Role.ADMIN, Role.TECHNICIAN)
+    @ApiBearerAuth()
+    @HttpCode(200)
+    @ApiResponse({ status: 200, description: 'Average usage time returned successfully.' })
+    @ApiResponse({ status: 404, description: 'Vehicle not found.' })
+    @ApiResponse({ status: 500, description: 'Internal server error.' })
+    public async calculateAverageUsageTime(@Param('id') id: string): Promise<{ averageUsageTime: number }> {
+        const averageUsageTime = await this.vehicleService.calculateAverageUsageTime(id);
+        return { averageUsageTime };
+    }
+
+    @Get('rental-counts')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.MODERATOR, Role.ADMIN, Role.TECHNICIAN)
+    @ApiBearerAuth()
+    @HttpCode(200)
+    @ApiResponse({ status: 200, description: 'Rental counts returned successfully.' })
+    @ApiResponse({ status: 500, description: 'Internal server error.' })
+    public async countRentalsByVehicle(): Promise<{ vehicleId: string; rentalCount: number }[]> {
+        const rentalCounts = await this.vehicleService.countRentalsByVehicle();
+        return rentalCounts;
     }
 }
-
 
 
 

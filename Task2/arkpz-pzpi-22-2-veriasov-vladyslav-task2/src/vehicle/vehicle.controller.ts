@@ -140,4 +140,29 @@ export class VehicleController {
         const result = await this.vehicleService.findAllFreeVehicle();
         return result;
     }
+
+    @Get('average-usage-time/:id')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.MODERATOR, Role.ADMIN, Role.TECHNICIAN)
+    @ApiBearerAuth()
+    @HttpCode(200)
+    @ApiResponse({ status: 200, description: 'Average usage time returned successfully.' })
+    @ApiResponse({ status: 404, description: 'Vehicle not found.' })
+    @ApiResponse({ status: 500, description: 'Internal server error.' })
+    public async calculateAverageUsageTime(@Param('id') id: string): Promise<{ averageUsageTime: number }> {
+        const averageUsageTime = await this.vehicleService.calculateAverageUsageTime(id);
+        return { averageUsageTime };
+    }
+
+    @Get('rental-counts')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.MODERATOR, Role.ADMIN, Role.TECHNICIAN)
+    @ApiBearerAuth()
+    @HttpCode(200)
+    @ApiResponse({ status: 200, description: 'Rental counts returned successfully.' })
+    @ApiResponse({ status: 500, description: 'Internal server error.' })
+    public async countRentalsByVehicle(): Promise<{ vehicleId: string; rentalCount: number }[]> {
+        const rentalCounts = await this.vehicleService.countRentalsByVehicle();
+        return rentalCounts;
+    }
 }
