@@ -1,8 +1,12 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RentalVehicleService } from './rental-vehicle.service';
 import { RentalVehicleDto } from './dtos/rental-vehicle.dto';
 import { UpdateRentalVehicleDto } from './dtos/update-rental-vehicle.dto';
+import { Roles } from 'src/auth/roles.decorator';
+import { Role } from '@prisma/client';
+import { RoleGuard } from 'src/auth/roles.guard';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @ApiTags('rental-vehicle')
 @Controller('rental-vehicle')
@@ -10,6 +14,9 @@ export class RentalVehicleController {
     constructor(private readonly rentalVehicleService: RentalVehicleService) { }
 
     @Get()
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.MODERATOR , Role.ADMIN , Role.USER , Role.TECHNICIAN)
+    @ApiBearerAuth()
     @HttpCode(200)
     @ApiResponse({ status: 200, description: 'List of all rental vehicles returned successfully.' })
     @ApiResponse({ status: 500, description: 'Internal server error.' })
@@ -19,6 +26,9 @@ export class RentalVehicleController {
     }
 
     @Post()
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.ADMIN , Role.USER)
+    @ApiBearerAuth()
     @HttpCode(201)
     @ApiResponse({ status: 201, description: 'Rental vehicle created successfully.' })
     @ApiResponse({ status: 400, description: 'Invalid input data.' })
@@ -29,6 +39,9 @@ export class RentalVehicleController {
     }
 
     @Put(':id')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.MODERATOR , Role.ADMIN , Role.USER)
+    @ApiBearerAuth()
     @HttpCode(200)
     @ApiResponse({ status: 200, description: 'Rental vehicle updated successfully.' })
     @ApiResponse({ status: 404, description: 'Rental vehicle not found.' })
@@ -39,6 +52,9 @@ export class RentalVehicleController {
     }
 
     @Delete(':id')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.ADMIN , Role.USER)
+    @ApiBearerAuth()
     @HttpCode(200)
     @ApiResponse({ status: 200, description: 'Rental vehicle deleted successfully.' })
     @ApiResponse({ status: 404, description: 'Rental vehicle not found.' })

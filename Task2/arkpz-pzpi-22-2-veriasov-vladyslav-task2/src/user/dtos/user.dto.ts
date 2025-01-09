@@ -52,4 +52,5 @@ export class UserDto {
     @IsEnum(Role)
     @IsNotEmpty()
     role: Role
+    id: any;
 }

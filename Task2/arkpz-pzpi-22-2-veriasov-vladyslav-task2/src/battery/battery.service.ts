@@ -35,4 +35,21 @@ export class BatteryService {
             status: battery.chargeLevel < 20 ? "LOW" : "NORMAL",
         }));
     }
+
+    async getImplementedBatteryInVehicle(id: string): Promise<CreateBatteryDto[]> {
+        const result = await this.prisma.batteryVehicle.findMany({
+            where: {
+                vehicleId: id,
+            },
+            include: { battery: true },
+        });
+        return result.map(({ battery }) => ({
+            id: battery.id,
+            chargeLevel: battery.chargeLevel,
+            status: battery.status,
+            condition: battery.condition,
+            type: battery.type,
+            capacity: battery.capacity,
+        }));
+    }  
 }

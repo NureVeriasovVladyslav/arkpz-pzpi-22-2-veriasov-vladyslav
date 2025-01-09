@@ -1,5 +1,5 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, InternalServerErrorException, NotFoundException, Param, Post, Put, Query } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, InternalServerErrorException, NotFoundException, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RentalService } from './rental.service';
 import { RentalDto } from './dtos/rental.dto';
 import { UpdateRentalDto } from './dtos/update-rental.dto';
@@ -9,6 +9,11 @@ import { CreateRentalDto } from './dtos/create-rental.dto';
 import { RentalVehicleDto } from 'src/rental-vehicle/dtos/rental-vehicle.dto';
 import { PaymentDto } from 'src/user/dtos/userPlus.dto';
 import { RentalNotFoundException } from 'src/exceptions/user-exceptions';
+import { Roles } from 'src/auth/roles.decorator';
+import { Role } from '@prisma/client';
+import { RoleGuard } from 'src/auth/roles.guard';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { OwnershipGuard } from 'src/auth/ownership.guard';
 
 @ApiTags('rental')
 @Controller('rental')
@@ -16,6 +21,9 @@ export class RentalController {
     constructor(private readonly rentalService: RentalService) { }
 
     @Get()
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.MODERATOR , Role.ADMIN)
+    @ApiBearerAuth()
     @HttpCode(200)
     @ApiResponse({ status: 200, description: 'List of all rentals returned successfully.' })
     @ApiResponse({ status: 500, description: 'Internal server error.' })
@@ -24,7 +32,10 @@ export class RentalController {
         return result;
     }
 
-    @Post()
+    @Post(':vehicleId')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.ADMIN , Role.USER)
+    @ApiBearerAuth()
     @HttpCode(201)
     @ApiResponse({ status: 201, description: 'Rental created successfully.' })
     @ApiResponse({ status: 400, description: 'Invalid input data.' })
@@ -35,6 +46,9 @@ export class RentalController {
     }
 
     @Put(':id')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.ADMIN , Role.USER)
+    @ApiBearerAuth()
     @HttpCode(200)
     @ApiResponse({ status: 200, description: 'Rental updated successfully.' })
     @ApiResponse({ status: 404, description: 'Rental not found.' })
@@ -45,6 +59,9 @@ export class RentalController {
     }
 
     @Delete(':id')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.ADMIN , Role.USER)
+    @ApiBearerAuth()
     @HttpCode(200)
     @ApiResponse({ status: 200, description: 'Rental deleted successfully.' })
     @ApiResponse({ status: 404, description: 'Rental not found.' })
@@ -55,6 +72,9 @@ export class RentalController {
     }
 
     @Get('total')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.ADMIN)
+    @ApiBearerAuth()
     @HttpCode(200)
     async getTotalProfit(
         @Query('startDate') startDate: string,
@@ -70,6 +90,9 @@ export class RentalController {
 
 
     @Get(':userId/rentals-with-vehicles')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.ADMIN , Role.MODERATOR)
+    @ApiBearerAuth()
     @ApiResponse({ status: 200, description: 'List of rentals with vehicles.' })
     @ApiResponse({ status: 404, description: 'User not found.' })
     public async getUserRentalsWithVehicles(@Param('userId') userId: string) {
@@ -78,6 +101,9 @@ export class RentalController {
     }
 
     @Get(':id')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.ADMIN , Role.MODERATOR)
+    @ApiBearerAuth()
     @HttpCode(200)
     async getRentalById(@Param('id') id: string) {
         try {
@@ -110,8 +136,8 @@ export class RentalController {
     //     return result;
     //   } catch (error) {
     //     throw new HttpException(
-    //       error.message || 'Internal server error.',
-    //       error.status || HttpStatus.INTERNAL_SERVER_ERROR
+    //       'Internal server error.',
+    //       HttpStatus.INTERNAL_SERVER_ERROR
     //     );
     //   }
     // }

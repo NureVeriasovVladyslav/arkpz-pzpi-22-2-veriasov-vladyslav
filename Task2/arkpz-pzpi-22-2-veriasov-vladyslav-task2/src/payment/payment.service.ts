@@ -42,4 +42,38 @@ export class PaymentService {
     //      });
     //     return result;
     // }
+
+    async findAllPaymentByUser(id: string): Promise<PaymentDto[]> {
+        const result = await this.prisma.payment.findMany({
+            where: {
+                rentalId: id,
+            }
+        });
+        return result;
+    }
+
+    // async findAllPaymentByUser(userId: string): Promise<PaymentDto[]> {
+    //     // Находим все аренды пользователя
+    //     const rentals = await this.prisma.rental.findMany({
+    //         where: { userId },
+    //         select: { id: true }, // Извлекаем только id аренды
+    //     });
+
+    //     const rentalIds = rentals.map((rental) => rental.id);
+
+    //     if (rentalIds.length === 0) {
+    //         return []; // Если у пользователя нет аренд, возвращаем пустой массив
+    //     }
+
+    //     // Находим платежи, связанные с арендами пользователя
+    //     const payments = await this.prisma.payment.findMany({
+    //         where: {
+    //             rentalId: { in: rentalIds },
+    //         },
+    //     });
+
+    //     return payments as PaymentDto[];
+    // }
+
+
 }

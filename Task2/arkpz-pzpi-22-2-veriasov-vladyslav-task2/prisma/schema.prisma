@@ -36,7 +36,7 @@ model Rental {
   avgSpeed            Float
   maxSpeed            Float
   energyConsumed      Float
-  user                User     @relation(fields: [userId], references: [id])
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   payment             Payment?
   rentalVehicle       RentalVehicle[]
 }
@@ -47,15 +47,15 @@ model Payment {
   amount              String
   date                String
   rentalId            String   @unique
-  rental              Rental   @relation(fields: [rentalId], references: [id])
+  rental              Rental   @relation(fields: [rentalId], references: [id], onDelete: Cascade)
 }
 
 model RentalVehicle {
   id                  String   @default(uuid()) @id
   vehicleId           String
-  vehicle             Vehicle  @relation(fields: [vehicleId], references: [id])
+  vehicle             Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
   rentalId            String
-  rental              Rental   @relation(fields: [rentalId], references: [id])
+  rental              Rental   @relation(fields: [rentalId], references: [id], onDelete: Cascade)
 }
 
 model Vehicle {
@@ -81,9 +81,9 @@ model Battery {
 model BatteryVehicle {
   id                  String   @default(uuid()) @id
   vehicleId           String
-  vehicle             Vehicle   @relation(fields: [vehicleId], references: [id])
+  vehicle             Vehicle   @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
   batteryId           String
-  battery             Battery   @relation(fields: [batteryId], references: [id])
+  battery             Battery   @relation(fields: [batteryId], references: [id], onDelete: Cascade)
 }
 
 enum Role {

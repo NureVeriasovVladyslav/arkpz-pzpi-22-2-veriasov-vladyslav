@@ -9,9 +9,12 @@ import { BatteryModule } from './battery/battery.module';
 import { RentalVehicleModule } from './rental-vehicle/rental-vehicle.module';
 import { BatteryVehicleModule } from './battery-vehicle/battery-vehicle.module';
 import { PrismaService } from './prisma/prisma.service';
+import { AuthModule } from './auth/auth.module';
+import { UserService } from './user/user.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
-  imports: [UserModule, RentalModule, PaymentModule, VehicleModule, BatteryModule, RentalVehicleModule, BatteryVehicleModule],
+  imports: [UserModule, RentalModule, PaymentModule, VehicleModule, BatteryModule, RentalVehicleModule, BatteryVehicleModule, AuthModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })

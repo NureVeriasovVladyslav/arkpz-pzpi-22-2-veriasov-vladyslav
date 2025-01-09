@@ -1,8 +1,12 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { VehicleService } from './vehicle.service';
 import { VehicleDto } from './dtos/vehicle.dto';
 import { UpdateVehicleDto } from './dtos/update-vehicle.dto';
+import { Roles } from 'src/auth/roles.decorator';
+import { Role, VehicleStatus } from '@prisma/client';
+import { RoleGuard } from 'src/auth/roles.guard';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @ApiTags('vehicle')
 @Controller('vehicle')
@@ -10,6 +14,9 @@ export class VehicleController {
     constructor(private readonly vehicleService: VehicleService) { }
 
     @Get()
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.MODERATOR , Role.ADMIN , Role.USER , Role.TECHNICIAN)
+    @ApiBearerAuth()
     @HttpCode(200)
     @ApiResponse({ status: 200, description: 'List of all vehicles returned successfully.' })
     @ApiResponse({ status: 500, description: 'Internal server error.' })
@@ -19,6 +26,9 @@ export class VehicleController {
     }
 
     @Post()
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.ADMIN)
+    @ApiBearerAuth()
     @HttpCode(201)
     @ApiResponse({ status: 201, description: 'Vehicle created successfully.' })
     @ApiResponse({ status: 400, description: 'Invalid input data.' })
@@ -29,6 +39,9 @@ export class VehicleController {
     }
 
     @Put(':id')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.MODERATOR , Role.ADMIN , Role.TECHNICIAN)
+    @ApiBearerAuth()
     @HttpCode(200)
     @ApiResponse({ status: 200, description: 'Vehicle updated successfully.' })
     @ApiResponse({ status: 404, description: 'Vehicle not found.' })
@@ -39,6 +52,9 @@ export class VehicleController {
     }
 
     @Delete(':id')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.ADMIN , Role.TECHNICIAN)
+    @ApiBearerAuth()
     @HttpCode(200)
     @ApiResponse({ status: 200, description: 'Vehicle deleted successfully.' })
     @ApiResponse({ status: 404, description: 'Vehicle not found.' })
@@ -49,6 +65,9 @@ export class VehicleController {
     }
 
     @Get('vehicle/distance/:id')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.MODERATOR , Role.ADMIN , Role.TECHNICIAN)
+    @ApiBearerAuth()
     @HttpCode(200)
     @ApiResponse({ status: 200, description: 'List of all vehicles returned successfully.' })
     @ApiResponse({ status: 500, description: 'Internal server error.' })
@@ -59,6 +78,9 @@ export class VehicleController {
 
 
     @Get('vehicle/avg/speed/:id')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.MODERATOR , Role.ADMIN , Role.USER , Role.TECHNICIAN)
+    @ApiBearerAuth()
     @HttpCode(200)
     @ApiResponse({ status: 200, description: 'List of all vehicles returned successfully.' })
     @ApiResponse({ status: 500, description: 'Internal server error.' })
@@ -68,6 +90,9 @@ export class VehicleController {
     }
 
     @Get('vehicle/info/:id')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.MODERATOR , Role.ADMIN , Role.TECHNICIAN)
+    @ApiBearerAuth()
     @HttpCode(200)
     @ApiResponse({ status: 200, description: 'List of all vehicles returned successfully.' })
     @ApiResponse({ status: 500, description: 'Internal server error.' })
@@ -77,6 +102,9 @@ export class VehicleController {
     }
 
     @Get('most-efficient')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.MODERATOR , Role.ADMIN , Role.TECHNICIAN)
+    @ApiBearerAuth()
     @HttpCode(200)
     @ApiResponse({ status: 200, description: 'List of all vehicles returned successfully.' })
     @ApiResponse({ status: 500, description: 'Internal server error.' })
@@ -89,4 +117,27 @@ export class VehicleController {
         }
     }
 
+    @Get('vehicle/with/:status')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.MODERATOR , Role.ADMIN , Role.TECHNICIAN)
+    @ApiBearerAuth()
+    @HttpCode(200)
+    @ApiResponse({ status: 200, description: 'List of all vehicles returned successfully.' })
+    @ApiResponse({ status: 500, description: 'Internal server error.' })
+    public async findAllVehicleWithStatus(@Param('status') status: VehicleStatus): Promise<VehicleDto[]> {
+        const result = await this.vehicleService.findAllVehicleWithStatus(status);
+        return result;
+    }
+    
+    @Get('vehicle/free')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(Role.USER, Role.ADMIN)
+    @ApiBearerAuth()
+    @HttpCode(200)
+    @ApiResponse({ status: 200, description: 'List of all vehicles returned successfully.' })
+    @ApiResponse({ status: 500, description: 'Internal server error.' })
+    public async findAllFreeVehicle(): Promise<VehicleDto[]> {
+        const result = await this.vehicleService.findAllFreeVehicle();
+        return result;
+    }
 }
